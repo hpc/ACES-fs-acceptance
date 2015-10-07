@@ -1,0 +1,12 @@
+After data has been placed in database, use the query files within this 
+directory to produce csv files.
+
+The queries within the files have "XX" in certain fields, so modify 
+accordingly.  
+
+You may want to test the query by cutting and pasting into mysql command
+line.  Once you are satisfied with the result, create a csv file using
+the command below.  Be sure and fill in hostname ('-h' and password 
+approprately. 
+
+mysql -h db_host.lanl.gov -u atorrez --password=password -D mpi_io_test_pro < testquery.sql | sed 's/\t/,/g' > out.csv

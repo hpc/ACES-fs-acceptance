@@ -1,0 +1,1 @@
+select from_unixtime(date_ts),num_tasks,items,file_create_mean,file_stat_mean,file_remove_mean,working_directory,command_line from mdtest where user like 'XX' and mpihost like 'trinitite' and command_line rlike 'nn_shared_dir' order by num_tasks;
