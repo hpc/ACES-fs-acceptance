@@ -6,9 +6,9 @@ user        = getpass.getuser()
 home        = os.getenv( "HOME" )
 my_mpi_host = os.getenv( "MY_MPI_HOST" )
 
-#mdtest_top = "/usr/projects/ioteam/trinitite/%s/mdtest-1.9.3/" % ( my_mpi_host )
 #mdtest_top = "/usr/projects/ioteam/trinitite/mdtest-1.9.3/"
-mdtest_top = "/users/atorrez/Testing/mdtest-dne/mdtest"
+#mdtest_top = "/users/atorrez/Testing/mdtest-s3-mdt"
+mdtest_top = "/home/atorrez/Testing/mdtest-dne/mdtest"
 
 # the mdtest_wrapper actually calls mpirun so use a non-default mpirun command
 # Not using this method anymore but left here for reference
@@ -24,7 +24,7 @@ ts = int( time.time() )
 # mpi_options, to exist. We will then use a custom "make_commands" below.
 #
 mpi_options = {
-#  "np"   : [ 16, 32, 64, 128, 256, 512, 1024 ], 
+#  "np"   : [ 2 ], 
 #  "np"   : [ 2 ], 
 #
 # "n" is used on the Crays.
@@ -36,8 +36,7 @@ mpi_program = ( "%s/mdtest" % ( mdtest_top ))
 
 #target = ( "/panfs/pas12a/vol1/%s/mdtest" % ( user ))
 #target_dirs = [ "/lus/trinity/lanl/mdtest", "/lus/trinity/lanl/mdtest" ]
-#target_dirs = [ "/scratch1/users/atorrez/mdtest","/scratch2/users/atorrez/mdtest" ]
-target_dirs = [ "/lustre/scratch5/atorrez/mdtest" ]
+target_dirs = [ "/scratch1/users/atorrez/mdtest","/scratch2/users/atorrez/mdtest" ]
 
 program_options = {
 #
@@ -62,13 +61,11 @@ program_options = {
 # The directory for the files.
 #
 #  "d" : [ "%s/mdtest.%d/" % ( target, ts ) ], 
-#  "d" : [ "%s/nn_unique_dir@%s/nn_unique_dir" % ( target_dirs[0], target_dirs[1] ) ], 
-#  "d" : [ "%s/nn_unique_dir", "%s/nn_unique_dir" % ( target_dirs[0], target_dirs[1] ) ], 
-  "d" : [ "%s/nn_unique_dir" % ( target_dirs[0] ) ], 
+  "d" : [ "%s/nn_shared_dir/mdt_0@%s/nn_shared_dir/mdt_1@%s/nn_shared_dir/mdt_2@%s/nn_shared_dir/mdt_3@%s/nn_shared_dir/mdt_4" % ( target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0] ) ], 
 #
 # Perform tests on directories only (no files).
 #
-#  "D" : [ '' ]
+#  "D" : [ '' ],
 #
 # Number of bytes to read from each file.
 #
@@ -77,6 +74,7 @@ program_options = {
 # Only read files.
 #
 #  "E" : [ '' ],
+#
 # First number of tasks on which test will run. I don't understand this and
 # there is no additional explanation in the README.
 #
@@ -88,7 +86,7 @@ program_options = {
 #
 # Number of iterations in the experiment. Default is 1.
 #
-  "i" : [ 1 ],
+  "i" : [ 3 ],
 #
 # "n" and "I" are mutually exclusive. In general, we prefer "n" because it
 # creates, stats, and deletes the files in the directory the caller
@@ -118,12 +116,15 @@ program_options = {
 # in the experiment by defining "n" here. We will use a custom
 # "make_commands" below.
 #
-#  "n" : [ 1024 ],
+  "n" : [ 1024 ],
+#
+# Use multiple mdts. Assign round robin dirs to all mdtes available
+#  "M" : [ '' ],
 #
 # Stride number between neighbor tasks for file/dir stat. Make this the number
 # of processes that will run on a node.
 #
-  "N" : [ 32 ],
+#  "N" : [ 32 ],
 #
 # Pre-iteration delay in seconds.
 #
@@ -215,28 +216,27 @@ def get_commands( expr_mgmt_options ):
     return expr_mgmt.get_commands(
         mpi_options=mpi_options,
         mpi_program=mpi_program,
-#        program_arguments=program_arguments,
-#        mpirun=mpirun,
+  ##      program_arguments=program_arguments,
+  ##      mpirun=mpirun,
         program_options=program_options,
         expr_mgmt_options=expr_mgmt_options )
 
   commands = []
 
   #for exponent in [ 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000, 100000 ]:
+  #for exponent in [ 1000, 2000, 5000, 10000, 50000, 100000,200000 ]:
   for exponent in [ 2000 ]:
     np = exponent
     mpi_options['n'] = [ np ]
     program_options['n'] = [ 1000000/np ]
     commands += make_commands()
 
-
-  ##for exponent in range ( 5, 12 ):
-  ##for exponent in range ( 13, 17 ):
-  ##for exponent in range ( 6, 7 ):
-  ##  np = 2**exponent
-  ##  mpi_options['n'] = [ np ]
-  ## program_options['n'] = [ 1048576/np ]
-  ##commands += make_commands()
+  #for exponent in range ( 5, 17 ):
+  ##for exponent in range ( 5, 6 ):
+    #np = 2**exponent
+    #mpi_options['n'] = [ np ]
+    #program_options['n'] = [ 1048576/np ]
+    #commands += make_commands()
 
   return commands
 

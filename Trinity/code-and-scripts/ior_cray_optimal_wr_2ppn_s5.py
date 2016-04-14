@@ -1,3 +1,8 @@
+#
+# Use this command line with this script:
+#
+# % ./run_expr.py -w 3600 -d list -M '-j oe -V' -p 2 -c experiments/ior_cray_optimal_wr_sweep_2ppn.py
+#
 import os,sys,datetime,time,getpass
 sys.path += [ './lib', '../lib' ]
 import expr_mgmt
@@ -24,12 +29,13 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/cray_home/atorrez/Testing/IOR/install/bin/ior" )
+mpi_program = ( "/users/atorrez/Testing/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch1/users/atorrez/nn","/scratch2/users/atorrez/nn" ]
+#target_dirs = [ "/scratch1/users/atorrez/nn" ]
+target_dirs = [ "/lustre/scratch5/atorrez/nn" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -40,9 +46,11 @@ mpi_options = {
 #  "n"    : [ pe-count-1, ..., pe-count-b ],
 #  "np"    : [ pe-count-1, ..., pe-count-c ],
 #  "n"    : [ 32, 64, 128, 256, 320, 512, 640 ],
-#  "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
-  "n"    : [ 1728 ],
+#  "n"    : [ 16 ],
 #  "n"    : [ 16, 32, 64, 128, 256, 512, 1024 ],
+#  "n"    : [ 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64 ],
+#  "n"    : [ 216, 432, 648, 864, 1080, 1296, 1512, 1728, 1944, 2160, 2376, 2592, 2808, 3024, 3240, 3456 ]
+  "n"    : [ 1728 ],
 }
 
 #
@@ -128,11 +136,7 @@ program_options = {
 #
 #  "b" : [ <integer block size> ],
 #  "b" : [ '2214592512' ],
-#  "b" : [ '798245441765376' ],
-#  "b" : [ '472781946880' ],
-#  "b" : [ '472781946880' ],
-  "b" : [ '462984052736' ],
-#  "b" : [ '1073741824' ],
+  "b" : [ '1024g' ],
 #
 # Whether or not to use O_DIRECT for POSIX, bypassing the I/O buffers.
 #
@@ -175,16 +179,16 @@ program_options = {
 # unsets this option. This option is incompatible with data checking.
 #
 #  "D" : [ <integer seconds> ],
-#  "D" : [ 1200 ],
+  "D" : [ 180 ],
 #
 # Whether or not to perform an "fsync" call after a POSIX close for writes.
 #
-#  "e" : [ '' ],
+  "e" : [ '' ],
 #
 # Whether or not to use an existing test file. Do not remove the file before
 # doing a write test. Default is to remove the file before doing a write test.
 #
-#  "E" : [ '' ],
+  "E" : [ '' ],
 #
 # The script that has IOR commands in it to execute.
 #
@@ -222,7 +226,7 @@ program_options = {
 # statistical performance versus one-time performance. The default is 1 (one).
 #
 #  "i" : [ '<integer repetitions>' ],
-  "i" : [ '1' ],
+#  "i" : [ '3' ],
 #
 # Whether or not to use individual datasets. If this parameter is used then
 # datasets are not shared by all processes. There is a note in the User Guide
@@ -263,7 +267,7 @@ program_options = {
 # This means that multiple files for single-shared-file or file-per-process
 # modes; e.g., each iteration creates a new file or files.
 #
-  "m" : [ '' ],
+#  "m" : [ '' ],
 #
 # How much memory to use on the node; e.g., 2g, 75%. This is used to simulate
 # real application memory usage. It accepts a percentage of node memory; e.g.,
@@ -292,8 +296,7 @@ program_options = {
 # Here's an example:
 #  "o" : [ "%s/%s/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/%s/nn/ior.out" % ( target_dirs[0], user ) ],
-#  "o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
-"o" : [ "%s/ior_MPIIO_%s.out@%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple()),target_dirs[1], time.mktime( datetime.datetime.now().timetuple())) ],
+  "o" : [ "%s/ior_POSIX_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
 #
 # String of IOR directives in name=value format; e.g.,
 # -O checkRead=1,lustreStripeCount=32.
@@ -326,7 +329,7 @@ program_options = {
 #
 # See the NOTE from the -w option.
 #
-  "r" : [ '' ],
+#  "r" : [ '' ],
 #
 # Whether or not to check that the value read was the value that was to
 # be written.
@@ -347,6 +350,7 @@ program_options = {
 # dataset.
 #
 #  "s" : [ <integer segments> ],
+  "s" : [ 1 ],
 #
 # Whether or not to put strided acces into the data type. There is anote in the
 # User Guide that this option is not working as of 14-Nov-2014.

@@ -24,12 +24,14 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/cray_home/atorrez/Testing/IOR/install/bin/ior" )
+#mpi_program = ( "/usr/projects/ioteam/IOR/install/bin/ior" )
+#mpi_program = ( "/users/atorrez/IOR/install/bin/ior" )
+mpi_program = ( "/usr/projects/ioteam/trinitite/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch1/users/atorrez/nn","/scratch2/users/atorrez/nn" ]
+target_dirs = [ "/tmp/dw_scr/atorrez" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -40,9 +42,10 @@ mpi_options = {
 #  "n"    : [ pe-count-1, ..., pe-count-b ],
 #  "np"    : [ pe-count-1, ..., pe-count-c ],
 #  "n"    : [ 32, 64, 128, 256, 320, 512, 640 ],
-#  "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
-  "n"    : [ 1728 ],
-#  "n"    : [ 16, 32, 64, 128, 256, 512, 1024 ],
+#  "n"    : [ 16, 32, 64, 128, 256, 512, 1024, 1536 ],
+#  "n"    : [ 256 ],
+  "n"    : [ 2048 ],
+#  "n"    : [ 1536 ],
 }
 
 #
@@ -115,6 +118,7 @@ program_options = {
 # The default is POSIX.
 #
 #  "a" : [ '<valid API option>' ],
+#  "a" : [ 'MPIIO' ],
   "a" : [ 'POSIX' ],
 #
 # A user reference number to include in the long summary
@@ -127,12 +131,11 @@ program_options = {
 # The default is 1048576 (or 1m).
 #
 #  "b" : [ <integer block size> ],
-#  "b" : [ '2214592512' ],
-#  "b" : [ '798245441765376' ],
-#  "b" : [ '472781946880' ],
-#  "b" : [ '472781946880' ],
-  "b" : [ '462984052736' ],
-#  "b" : [ '1073741824' ],
+  #"b" : [ '2214592512' ],
+  #"b" : [ '1073741824' ],
+  #"b" : [ '2147483648' ],
+  #"b" : [ '2147483648', '4294967296', '8589934592' ],
+  "b" : [ '2147483648' ],
 #
 # Whether or not to use O_DIRECT for POSIX, bypassing the I/O buffers.
 #
@@ -175,7 +178,6 @@ program_options = {
 # unsets this option. This option is incompatible with data checking.
 #
 #  "D" : [ <integer seconds> ],
-#  "D" : [ 1200 ],
 #
 # Whether or not to perform an "fsync" call after a POSIX close for writes.
 #
@@ -222,7 +224,7 @@ program_options = {
 # statistical performance versus one-time performance. The default is 1 (one).
 #
 #  "i" : [ '<integer repetitions>' ],
-  "i" : [ '1' ],
+  "i" : [ '3' ],
 #
 # Whether or not to use individual datasets. If this parameter is used then
 # datasets are not shared by all processes. There is a note in the User Guide
@@ -246,7 +248,7 @@ program_options = {
 # Whether or not to keep the test files when the test is done. Default is
 # to remove files when test is done.
 #
-  "k" : [ '' ],
+#  "k" : [ '' ],
 #
 # Whether or not to keep files with errors in them after doing data-checking.
 # Default is to remove the files with errors when the test is done.
@@ -292,8 +294,7 @@ program_options = {
 # Here's an example:
 #  "o" : [ "%s/%s/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/%s/nn/ior.out" % ( target_dirs[0], user ) ],
-#  "o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
-"o" : [ "%s/ior_MPIIO_%s.out@%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple()),target_dirs[1], time.mktime( datetime.datetime.now().timetuple())) ],
+  "o" : [ "%s/ior_POSIX_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
 #
 # String of IOR directives in name=value format; e.g.,
 # -O checkRead=1,lustreStripeCount=32.
@@ -358,7 +359,10 @@ program_options = {
 # (256k).
 #
 #  "t" : [ <transfer size> ],
-  "t" : [ '64m' ],
+  #"t" : [ '48m' ],
+  #"t" : [ '512k', '1m', '2m', '4m', '8m' ],
+  #"t" : [ '1m' ],
+  "t" : [ '256k', '512k', '1024k' ],
 #
 # The maximum time in minutes to run tests. The default is 0 (zero).
 #
@@ -527,3 +531,4 @@ def get_commands( expr_mgmt_options ):
 
 #  return commands
 #############################################################################
+

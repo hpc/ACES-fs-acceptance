@@ -29,12 +29,12 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/usr/projects/ioteam/trinitite/IOR/install/bin/ior" )
+mpi_program = ( "/home/atorrez/Testing/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch1/users/ioteam/n1" ]
+target_dirs = [ "/scratch1/users/atorrez/n1","/scratch2/users/atorrez/n1" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -50,7 +50,7 @@ mpi_options = {
 #
 # Optimal will likely be 8 writers per OST.
 #
-  "n"    : [ 32 ],
+  "n"    : [ 1728 ],
 }
 
 #
@@ -136,7 +136,8 @@ program_options = {
 #
 #  "b" : [ <integer block size> ],
 #  "b" : [ '2214592512' ],
-  "b" : [ '1024g' ],
+#  "b" : [ '1024g' ],
+  "b" : [ '64m' ],
 #
 # Whether or not to use O_DIRECT for POSIX, bypassing the I/O buffers.
 #
@@ -295,7 +296,7 @@ program_options = {
 # Here's an example:
 #  "o" : [ "%s/%s/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/%s/nn/ior.out" % ( target_dirs[0], user ) ],
-  "o" : [ "%s/ior_n-1_optimal_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
+  "o" : [ "%s/ior_n-1_optimal_MPIIO_%s.out@%s/ior_n-1_optimal_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple()),target_dirs[1], time.mktime( datetime.datetime.now().timetuple())) ],
 #
 # String of IOR directives in name=value format; e.g.,
 # -O checkRead=1,lustreStripeCount=32.
@@ -353,7 +354,8 @@ program_options = {
 # Divide the 1024g total data, written 64m at a time by 32 pes and each pe
 # writes 512 segments.
 #
-  "s" : [ '512' ],
+#  "s" : [ '512' ],
+  "s" : [ '256' ],
 #
 # Whether or not to put strided acces into the data type. There is anote in the
 # User Guide that this option is not working as of 14-Nov-2014.

@@ -24,12 +24,12 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/cray_home/atorrez/Testing/IOR/install/bin/ior" )
+mpi_program = ( "/users/atorrez/Testing/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch1/users/atorrez/nn","/scratch2/users/atorrez/nn" ]
+target_dirs = [ "/lustre/scratch5/atorrez/nn" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -293,7 +293,7 @@ program_options = {
 #  "o" : [ "%s/%s/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/%s/nn/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
-"o" : [ "%s/ior_MPIIO_%s.out@%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple()),target_dirs[1], time.mktime( datetime.datetime.now().timetuple())) ],
+"o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
 #
 # String of IOR directives in name=value format; e.g.,
 # -O checkRead=1,lustreStripeCount=32.

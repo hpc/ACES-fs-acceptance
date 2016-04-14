@@ -24,7 +24,7 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/cray_home/atorrez/Testing/IOR/install/bin/ior" )
+mpi_program = ( "/home/atorrez/Testing/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
@@ -326,7 +326,7 @@ program_options = {
 #
 # See the NOTE from the -w option.
 #
-  "r" : [ '' ],
+#  "r" : [ '' ],
 #
 # Whether or not to check that the value read was the value that was to
 # be written.
