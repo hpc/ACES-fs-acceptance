@@ -19,9 +19,9 @@ import os
 import array
 import string
 import time
-import user
+#import user
 import re
-import MySQLdb as db
+#import MySQLdb as db
 from optparse import OptionParser
 
 import subprocess
@@ -38,9 +38,10 @@ def main():
     
     # check for minimum number of arguments
     if (len(sys.argv) != 5):
-        print "Your command needs to have two arguements"
-        print "It should look something like this:"
-        print "python ior_out_to_db.py --file ior_output_file --db_file_path path"
+        print ("%d", len(sys.argv))
+        print ("Your command needs to have two arguements")
+        print ("It should look something like this:")
+        print ("python ior_out_to_db.py --file ior_output_file --db_file_path path")
         sys.exit()
 
     #  look for arguments
@@ -195,6 +196,8 @@ def initDictionary(db_data):
     db_data['procs_per_node'] = None     # "processors"? or "processes"? (assuming latter)
 #    db_data['walltime'] = walltime
     db_data['run_time_error'] = None
+    db_data['msub_options'] = None
+    db_data['run_command'] = None
 
 
 
@@ -205,7 +208,7 @@ def getEnv(path_to_script, db_data):
     if (path_to_script is not None and os.path.exists(path_to_script)):
         #TODO: this should use target 
         command = "%s %s" % (path_to_script, os.getcwd())
-        print "getENV: command = '" + command + "'"
+        print ("getENV: command = '" + command + "'")
         p = os.popen(command)
         env_result = p.read()
         lines = env_result.splitlines()
@@ -265,7 +268,7 @@ def getEnv(path_to_script, db_data):
 
 # fail wrapper to print error and exit
 def fail(message):
-    print message
+    print (message)
     sys.exit()
 
 
@@ -358,6 +361,12 @@ def parseOutput(output, db_data):
 
             if (len(tokens) == 0):
                 continue
+            elif (tokens[0] == '#' and tokens[1] == 'MSUB'):
+                msub_opts = " ".join(tokens[3:])
+                db_data['msub_options'] = msub_opts
+            elif (tokens[0] == '#' and tokens[1] == 'run'):
+                run_cmd = " ".join(tokens[3:])
+                db_data['run_command'] = run_cmd 
             elif (tokens[0] == 'Command'):
                 command = " ".join(tokens[3:]) 
                 db_data['command_line'] = command
@@ -606,7 +615,8 @@ def parseParams(argArray, db_data):
     (options, args) = parser.parse_args(argArray)
 
     for k,v in vars(options).items():
-        if db_data.has_key(k):
+        #if db_data.has_key(k):
+        if 'k' in db_data: 
             db_data[k] = v
             #print k + "\t" + str(db_data[k])
 
@@ -649,36 +659,36 @@ def db_insert(dbconn, db_data, db_path):
 
     query += "')"
 
-    try: 
+    #try: 
         # connect to the database
-        conn = db.connect(host=host,db=db,user=user,passwd=passwd)
-        cursor = conn.cursor()
+    #    conn = db.connect(host=host,db=db,user=user,passwd=passwd)
+    #    cursor = conn.cursor()
     
         # execute the query
-        cursor.execute(query)
+    #    cursor.execute(query)
 
         # close connection
-        cursor.close()
-        conn.close()
+    #    cursor.close()
+    #    conn.close()
         
-        print "Query inserted into database"
+    #    print ("Query inserted into database")
 
-    except:
+    #except:
 
         #sql_file = os.getenv('HOME') + "/ior.sql_query"
-        sql_file = db_path + "/ior.sql_query"
+    sql_file = db_path + "/ior.sql_query"
 
         # if unable to connect to db, print query to file sql_query
-        try:
-            f = open(sql_file,'a')
-        except:
-            f = open(sql_file,'w')
-        try:
-            f.write(query + ';\n')
-            f.close()
-            print "\nAppended query to %s" % sql_file 
-        except:
-            print "Unable to append query to %s" % sql_file
+    try:
+        f = open(sql_file,'a')
+    except:
+        f = open(sql_file,'w')
+    try:
+        f.write(query + ';\n')
+        f.close()
+        print ("\nAppended query to %s" % sql_file)
+    except:
+        print ("Unable to append query to %s" % sql_file)
 
     # print query to standard out for user's benefit
     #print query
@@ -722,8 +732,8 @@ def gnuplot_insert(db_data):
     f.write(line + "\n");
     f.close()
 
-    print "\nAppended line to %s" % gnuplot_data
-    print line
+    print ("\nAppended line to %s" % gnuplot_data)
+    print (line)
 
 
 # if the gnuplot-cokmmands file doesn't already exist, then create it.
