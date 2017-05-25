@@ -24,12 +24,22 @@ user     = getpass.getuser()
 home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
-mpi_program = ( "/home/atorrez/Testing/IOR/install/bin/ior" )
+#mpi_program = ( "/usr/projects/ioteam/trinitite/IOR/install/bin/ior" )
+mpi_program = ( "/usr/projects/ioteam/trinity/Testing/IOR/install/bin/ior" )
+
+
+# Specific to Cray Trinity Machiness
+#program_arguments = ( "KNL" )
+#program_arguments = ( "KNL+HASWELL" )
+#program_arguments = ( "" )
+#program_arguments = ( "HASWELL" )
+#program_arguments = None
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch2/users/atorrez/nn" ]
+#target_dirs = [ "/scratch1/users/ioteam/nn" ]
+target_dirs = [ "/lustre/trscratch1/atorrez/nn" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -39,10 +49,7 @@ mpi_options = {
 #  "N"     : [ pe-count-per-node-1, ..., pe-count-per-node-a ],
 #  "n"    : [ pe-count-1, ..., pe-count-b ],
 #  "np"    : [ pe-count-1, ..., pe-count-c ],
-#  "n"    : [ 32, 64, 128, 256, 320, 512, 640 ],
   "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
-#  "n"    : [ 3200 ],
-#  "n"    : [ 16, 32, 64, 128, 256, 512, 1024 ],
 }
 
 #
@@ -127,7 +134,7 @@ program_options = {
 # The default is 1048576 (or 1m).
 #
 #  "b" : [ <integer block size> ],
-  "b" : [ '2214592512' ],
+  "b" : [ '2g' ],
 #
 # Whether or not to use O_DIRECT for POSIX, bypassing the I/O buffers.
 #
@@ -173,7 +180,7 @@ program_options = {
 #
 # Whether or not to perform an "fsync" call after a POSIX close for writes.
 #
-#  "e" : [ '' ],
+  "e" : [ '' ],
 #
 # Whether or not to use an existing test file. Do not remove the file before
 # doing a write test. Default is to remove the file before doing a write test.
@@ -452,7 +459,7 @@ def get_commands( expr_mgmt_options ):
   return expr_mgmt.get_commands(
       mpi_program=mpi_program,
       expr_mgmt_options=expr_mgmt_options,
-#      program_arguments=program_arguments,
+      #program_arguments=program_arguments,
       mpi_options=mpi_options,
       program_options=program_options )
 #      program_options=program_options,
