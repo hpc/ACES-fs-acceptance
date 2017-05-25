@@ -25,12 +25,12 @@ home     = os.getenv( "HOME" )
 mpi_host = os.getenv( "MY_MPI_HOST" )
 
 #mpi_program = ( "/usr/projects/ioteam/trinitite/IOR/install/bin/ior" )
-mpi_program = ( "/cray_home/atorrez/Testing/IOR/install/bin/ior" )
+mpi_program = ( "/usr/projects/ioteam/trinity/Testing/IOR/install/bin/ior" )
 
 #
 # The targets of IOR.
 #
-target_dirs = [ "/scratch1/users/atorrez/n1", "/scratch2/users/atorrez/n1-206-8m" ]
+target_dirs = [ "/lustre/trscratch1/atorrez/n1" ]
 
 #
 # Setup the MPI options you want to pass to the MPI launching program, for
@@ -40,11 +40,7 @@ mpi_options = {
 #  "N"     : [ pe-count-per-node-1, ..., pe-count-per-node-a ],
 #  "n"    : [ pe-count-1, ..., pe-count-b ],
 #  "np"    : [ pe-count-1, ..., pe-count-c ],
-#  "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
-#  "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536 ],
-#  "n"    : [ 2048, 4096, 8192, 16384, 32768, 65536 ],
-  "n"    : [ 16384 ],
-#  "n"    : [ 16, 32, 64, 128, 256, 512, 1024 ],
+  "n"    : [ 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 ],
 }
 
 #
@@ -130,6 +126,7 @@ program_options = {
 #
 #  "b" : [ <integer block size> ],
 #  "b" : [ '2214592512' ],
+#  "b" : [ '48m' ],
   "b" : [ '8m' ],
 #
 # Whether or not to use O_DIRECT for POSIX, bypassing the I/O buffers.
@@ -219,7 +216,7 @@ program_options = {
 # statistical performance versus one-time performance. The default is 1 (one).
 #
 #  "i" : [ '<integer repetitions>' ],
-  "i" : [ '2' ],
+  "i" : [ '3' ],
 #
 # Whether or not to use individual datasets. If this parameter is used then
 # datasets are not shared by all processes. There is a note in the User Guide
@@ -289,7 +286,7 @@ program_options = {
 # Here's an example:
 #  "o" : [ "%s/%s/ior.out" % ( target_dirs[0], user ) ],
 #  "o" : [ "%s/%s/nn/ior.out" % ( target_dirs[0], user ) ],
-  "o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[1], time.mktime( datetime.datetime.now().timetuple())) ],
+  "o" : [ "%s/ior_MPIIO_%s.out" % ( target_dirs[0], time.mktime( datetime.datetime.now().timetuple())) ],
 #
 # String of IOR directives in name=value format; e.g.,
 # -O checkRead=1,lustreStripeCount=32.
@@ -355,6 +352,7 @@ program_options = {
 # (256k).
 #
 #  "t" : [ <transfer size> ],
+#  "t" : [ '48m' ],
   "t" : [ '8m' ],
 #
 # The maximum time in minutes to run tests. The default is 0 (zero).
