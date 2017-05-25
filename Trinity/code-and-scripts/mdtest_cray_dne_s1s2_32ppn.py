@@ -6,9 +6,8 @@ user        = getpass.getuser()
 home        = os.getenv( "HOME" )
 my_mpi_host = os.getenv( "MY_MPI_HOST" )
 
-#mdtest_top = "/usr/projects/ioteam/trinitite/mdtest-1.9.3/"
-#mdtest_top = "/users/atorrez/Testing/mdtest-s3-mdt"
-mdtest_top = "/home/atorrez/Testing/mdtest-dne/mdtest"
+#mdtest_top = "/usr/projects/ioteam/trinitite/mdtest-dne/mdtest"
+mdtest_top = "/usr/projects/ioteam/trinity/Testing/mdtest-dne/mdtest"
 
 # the mdtest_wrapper actually calls mpirun so use a non-default mpirun command
 # Not using this method anymore but left here for reference
@@ -36,7 +35,8 @@ mpi_program = ( "%s/mdtest" % ( mdtest_top ))
 
 #target = ( "/panfs/pas12a/vol1/%s/mdtest" % ( user ))
 #target_dirs = [ "/lus/trinity/lanl/mdtest", "/lus/trinity/lanl/mdtest" ]
-target_dirs = [ "/scratch1/users/atorrez/mdtest","/scratch2/users/atorrez/mdtest" ]
+#target_dirs = [ "/scratch1/users/atorrez/mdtest","/scratch2/users/atorrez/mdtest" ]
+target_dirs = [ "/lustre/trscratch1","/lustre/trscratch2" ]
 
 program_options = {
 #
@@ -60,9 +60,9 @@ program_options = {
 #
 # The directory for the files.
 #
-#  "d" : [ "%s/mdtest.%d/" % ( target, ts ) ], 
-  "d" : [ "%s/nn_shared_dir/mdt_0@%s/nn_shared_dir/mdt_1@%s/nn_shared_dir/mdt_2@%s/nn_shared_dir/mdt_3@%s/nn_shared_dir/mdt_4@%s/nn_shared_dir/mdt_0@%s/nn_shared_dir/mdt_1@%s/nn_shared_dir/mdt_2@%s/nn_shared_dir/mdt_3@%s/nn_shared_dir/mdt_4" % ( target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[1],target_dirs[1],target_dirs[1],target_dirs[1],target_dirs[1] ) ], 
-#  "d" : [ "%s/nn_shared_dir/mdt_0" % ( target_dirs[0] ) ], 
+  "d" : [ "%s/mdtest.%d/" % ( target_dirs[0], ts ) ], 
+#  "d" : [ "%s/nn_shared_dir/mdt_0@%s/nn_shared_dir/mdt_1@%s/nn_shared_dir/mdt_2@%s/nn_shared_dir/mdt_3@%s/nn_shared_dir/mdt_4" % ( target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0] ) ], 
+  "d" : [ "%s/.md0/atorrez/nn_shared_dir/@%s/.md1/atorrez/nn_shared_dir/@%s/.md2/atorrez/nn_shared_dir/@%s/.md3/atorrez/nn_shared_dir/@%s/.md4/atorrez/nn_shared_dir/@%s/.md0/atorrez/nn_shared_dir/@%s/.md1/atorrez/nn_shared_dir/@%s/.md2/atorrez/nn_shared_dir/@%s/.md3/atorrez/nn_shared_dir/@%s/.md4/atorrez/nn_shared_dir/" % ( target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[0],target_dirs[1],target_dirs[1],target_dirs[1],target_dirs[1],target_dirs[1] ) ],
 #
 # Perform tests on directories only (no files).
 #
@@ -226,12 +226,11 @@ def get_commands( expr_mgmt_options ):
 
   #for exponent in [ 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000, 100000 ]:
   #for exponent in [ 1000, 2000, 5000, 10000, 50000, 100000,200000 ]:
-  #for exponent in [ 200000 ]:
+  #for exponent in [ 2000 ]:
   for exponent in [ 2000 ]:
     np = exponent
     mpi_options['n'] = [ np ]
     program_options['n'] = [ 1000000/np ]
-    #program_options['n'] = [ 32/np ]
     commands += make_commands()
 
   #for exponent in range ( 5, 17 ):
